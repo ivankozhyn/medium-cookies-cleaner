@@ -5,145 +5,105 @@ chrome.tabs.onCreated.addListener(async (tab) => {
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   if (changeInfo.url) {
     const urlsList = [
-      "https://www.google.com/search/",
-      "https://towardsdatascience.com/",
-      "https://hackernoon.com/",
-      "https://medium.freecodecamp.org/",
-      "https://psiloveyou.xyz/",
-      "https://betterhumans.coach.me/",
-      "https://codeburst.io/",
-      "https://theascent.pub/",
-      "https://medium.mybridge.co/",
-      "https://uxdesign.cc/",
-      "https://levelup.gitconnected.com/",
-      "https://itnext.io/",
-      "https://entrepreneurshandbook.co/",
-      "https://proandroiddev.com/",
-      "https://blog.prototypr.io/",
-      "https://thebolditalic.com/",
-      "https://blog.usejournal.com/",
-      "https://blog.angularindepth.com/",
-      "https://blog.bitsrc.io/",
-      "https://blog.devartis.com/",
-      "https://blog.maddevs.io/",
-      "https://blog.getambassador.io/",
-      "https://uxplanet.org/",
-      "https://instagram-engineering.com/",
-      "https://calia.me/",
-      "https://productcoalition.com/",
-      "https://engineering.opsgenie.com/",
-      "https://android.jlelse.eu/",
-      "https://robinhood.engineering/",
-      "https://blog.hipolabs.com/",
-      "https://ux.shopify.com/",
-      "https://engineering.talkdesk.com/",
-      "https://blog.codegiant.io/",
-      "https://tech.olx.com/",
-      "https://netflixtechblog.com/",
-      "https://hackingandslacking.com/",
-      "https://blog.kotlin-academy.com/",
-      "https://blog.securityevaluators.com/",
-      "https://blog.kubernauts.io/",
-      "https://blog.coffeeapplied.com/",
-      "https://unbounded.io/",
-      "https://writingcooperative.com/",
-      "https://plainenglish.io/",
-      "https://blog.doit-intl.com/",
-      "https://eand.co/",
-      "https://techuisite.com/",
-      "https://levelupprogramming.net/",
-      "https://betterhumans.pub/",
-      "https://betterprogramming.pub/",
-      "https://pub.towardsai.net/",
-      "https://bettermarketing.pub/",
-      "https://themakingofamillionaire.com/",
-      "https://medium.datadriveninvestor.com/",
-      "https://bootcamp.uxdesign.cc/",
-      "https://baos.pub/",
-      "https://www.inbitcoinwetrust.net/",
-      "https://blog.prototypr.io/",
-      "https://blog.devgenius.io/",
-    ];
-
-    const urlsShortList = [
-      "medium.com",
-      "towardsdatascience.com",
-      "hackernoon.com",
-      "medium.freecodecamp.org",
-      "psiloveyou.xyz",
-      "betterhumans.coach.me",
-      "codeburst.io",
-      "theascent.pub",
-      "medium.mybridge.co",
-      "uxdesign.cc",
-      "levelup.gitconnected.com",
-      "itnext.io",
-      "entrepreneurshandbook.co",
-      "proandroiddev.com",
-      "blog.prototypr.io",
-      "thebolditalic.com",
-      "blog.usejournal.com",
-      "blog.angularindepth.com",
-      "blog.bitsrc.io",
-      "blog.devartis.com",
-      "blog.maddevs.io",
-      "blog.getambassador.io",
-      "uxplanet.org",
-      "instagram-engineering.com",
-      "calia.me",
-      "productcoalition.com",
-      "engineering.opsgenie.com",
-      "android.jlelse.eu",
-      "robinhood.engineering",
-      "log.hipolabs.com",
-      "ux.shopify.com",
-      "engineering.talkdesk.com",
-      "blog.codegiant.io",
-      "tech.olx.com",
-      "netflixtechblog.com",
-      "hackingandslacking.com",
-      "blog.kotlin-academy.com",
-      "blog.securityevaluators.com",
-      "blog.kubernauts.io",
-      "blog.coffeeapplied.com",
-      "unbounded.io",
-      "writingcooperative.com",
-      "plainenglish.io",
-      "blog.doit-intl.com",
-      "eand.co",
-      "techuisite.com",
-      "levelupprogramming.net",
-      "betterhumans.pub",
-      "betterprogramming.pub",
-      "pub.towardsai.net",
-      "bettermarketing.pub",
-      "themakingofamillionaire.com",
-      "medium.datadriveninvestor.com",
-      "bootcamp.uxdesign.cc",
-      "baos.pub",
-      "inbitcoinwetrust.net",
-      "blog.prototypr.io",
-      "blog.devgenius.io",
+      "https://medium.com/*",
+      "https://www.google.com/search/*",
+      "https://towardsdatascience.com/*",
+      "https://hackernoon.com/*",
+      "https://medium.freecodecamp.org/*",
+      "https://psiloveyou.xyz/*",
+      "https://betterhumans.coach.me/*",
+      "https://codeburst.io/*",
+      "https://theascent.pub/*",
+      "https://*.medium.com/*",
+      "https://medium.mybridge.co/*",
+      "https://uxdesign.cc/*",
+      "https://levelup.gitconnected.com/*",
+      "https://itnext.io/*",
+      "https://entrepreneurshandbook.co/*",
+      "https://proandroiddev.com/*",
+      "https://blog.prototypr.io/*",
+      "https://thebolditalic.com/*",
+      "https://blog.usejournal.com/*",
+      "https://blog.angularindepth.com/*",
+      "https://blog.bitsrc.io/*",
+      "https://blog.devartis.com/*",
+      "https://blog.maddevs.io/*",
+      "https://blog.getambassador.io/*",
+      "https://uxplanet.org/*",
+      "https://instagram-engineering.com/*",
+      "https://calia.me/*",
+      "https://productcoalition.com/*",
+      "https://engineering.opsgenie.com/*",
+      "https://android.jlelse.eu/*",
+      "https://robinhood.engineering/*",
+      "https://blog.hipolabs.com/*",
+      "https://ux.shopify.com/*",
+      "https://engineering.talkdesk.com/*",
+      "https://blog.codegiant.io/*",
+      "https://tech.olx.com/*",
+      "https://netflixtechblog.com/*",
+      "https://hackingandslacking.com/*",
+      "https://blog.kotlin-academy.com/*",
+      "https://blog.securityevaluators.com/*",
+      "https://blog.kubernauts.io/*",
+      "https://blog.coffeeapplied.com/*",
+      "https://unbounded.io/*",
+      "https://writingcooperative.com/*",
+      "https://*.plainenglish.io/*",
+      "https://*.betterprogramming.pub/*",
+      "https://blog.doit-intl.com/*",
+      "https://eand.co/*",
+      "https://techuisite.com/*",
+      "https://levelupprogramming.net/*",
+      "https://betterhumans.pub/*",
+      "https://betterprogramming.pub/*",
+      "https://pub.towardsai.net/*",
+      "https://bettermarketing.pub/*",
+      "https://themakingofamillionaire.com/*",
+      "https://medium.datadriveninvestor.com/*",
+      "https://bootcamp.uxdesign.cc/*",
+      "https://*.baos.pub/*",
+      "https://www.inbitcoinwetrust.net/*",
+      "https://blog.prototypr.io/*",
+      "https://blog.devgenius.io/*",
     ];
 
     init();
 
     function init() {
       if (checkSafeUrl()) {
-        deleteMediumCookies();
         deleteCurrentTabUrlCookie();
         deleteUrlsListCookies();
       }
     }
 
-    function checkSafeUrl() {
-      return !!urlsShortList.filter((url) =>
-        getCurrentTabHostname().includes(url)
-      ).length;
+    function getUrlsListWithoutHTTPS() {
+      return [
+        ...new Set(
+          urlsList.map((url) => {
+            return url
+              .replace("https://*.", "")
+              .replace("https://", "")
+              .slice(0, -2);
+          })
+        ),
+      ];
     }
 
-    function deleteMediumCookies() {
-      deleteDomainCookies("medium.com");
+    function getUrlsListWithoutUnknownSubDomain() {
+      return [
+        ...new Set(
+          urlsList.map((url) => {
+            return url.replace("https://*.", "https://");
+          })
+        ),
+      ];
+    }
+
+    function checkSafeUrl() {
+      return !!getUrlsListWithoutHTTPS().filter((url) =>
+        getCurrentTabHostname().includes(url)
+      ).length;
     }
 
     function deleteCurrentTabUrlCookie() {
@@ -151,7 +111,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
     }
 
     function deleteUrlsListCookies() {
-      urlsList.forEach((url) => {
+      getUrlsListWithoutUnknownSubDomain().forEach((url) => {
         let newUrl = new URL(url);
         deleteDomainCookies(newUrl.hostname);
       });
