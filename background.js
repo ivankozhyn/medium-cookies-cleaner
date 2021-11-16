@@ -1,4 +1,8 @@
-chrome.tabs.onUpdated.addListener(function (_, changeInfo) {
+chrome.tabs.onCreated.addListener(async (tab) => {
+  await chrome.action.setBadgeText({ tabId: tab.id, text: "" });
+});
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   if (changeInfo.url) {
     const urlsList = [
       "https://www.google.com/search/",
@@ -157,13 +161,6 @@ chrome.tabs.onUpdated.addListener(function (_, changeInfo) {
       return new URL(changeInfo.url).hostname;
     }
 
-    function reloadCurrentTab() {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.reload(tabs[0].id);
-      });
-      console.log("Cookies have deleted recently");
-    }
-
     async function deleteDomainCookies(domain) {
       let cookiesDeleted = 0;
       try {
@@ -176,15 +173,19 @@ chrome.tabs.onUpdated.addListener(function (_, changeInfo) {
         let pending = cookies.map(deleteCookie);
         await Promise.all(pending);
         cookiesDeleted = pending.length;
-
-        reloadCurrentTab();
       } catch (error) {
         console.log(`Cookies cleaner unexpected error: ${error.message}`);
-
-        return `Unexpected error: ${error.message}`;
       }
 
-      return `Deleted ${cookiesDeleted} cookie(s).`;
+      setBadgeDone();
+    }
+
+    async function setBadgeDone() {
+      await chrome.action.setBadgeBackgroundColor({
+        tabId,
+        color: "#34A853",
+      });
+      await chrome.action.setBadgeText({ tabId, text: "Done" });
     }
 
     function deleteCookie(cookie) {
