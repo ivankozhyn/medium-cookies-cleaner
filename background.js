@@ -73,7 +73,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
     function init() {
       if (checkSafeUrl()) {
         deleteCurrentTabUrlCookie();
-        deleteUrlsListCookies();
+        deleteMediumCookies();
       }
     }
 
@@ -90,16 +90,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
       ];
     }
 
-    function getUrlsListWithoutUnknownSubDomain() {
-      return [
-        ...new Set(
-          urlsList.map((url) => {
-            return url.replace("https://*.", "https://");
-          })
-        ),
-      ];
-    }
-
     function checkSafeUrl() {
       return !!getUrlsListWithoutHTTPS().filter((url) =>
         getCurrentTabHostname().includes(url)
@@ -110,11 +100,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
       deleteDomainCookies(getCurrentTabHostname());
     }
 
-    function deleteUrlsListCookies() {
-      getUrlsListWithoutUnknownSubDomain().forEach((url) => {
-        let newUrl = new URL(url);
-        deleteDomainCookies(newUrl.hostname);
-      });
+    function deleteMediumCookies() {
+      deleteDomainCookies("medium.com");
     }
 
     function getCurrentTabHostname() {
@@ -138,6 +125,38 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
       }
 
       setBadgeDone();
+      setMyJSCodeToCurrentSite();
+    }
+
+    function setMyJSCodeToCurrentSite() {
+      chrome.scripting.executeScript({
+        target: { tabId },
+        function: DeleteMediumBanners,
+      });
+    }
+
+    function DeleteMediumBanners() {
+      deleteFreeStoriesMediumCounterBanner();
+      deleteSignInMediumBanner();
+
+      function deleteFreeStoriesMediumCounterBanner() {
+        const freeStoriesMediumCounterBanner = document.querySelector(
+          ".meteredContent>section"
+        );
+        if (freeStoriesMediumCounterBanner) {
+          freeStoriesMediumCounterBanner.style.display = "none";
+        }
+      }
+
+      function deleteSignInMediumBanner() {
+        const signInBanner = document.querySelector(
+          "#alternate-user-top-banner-header"
+        );
+        if (signInBanner) {
+          signInBanner.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display =
+            "none";
+        }
+      }
     }
 
     async function setBadgeDone() {
@@ -149,13 +168,14 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
     }
 
     function deleteCookie(cookie) {
-      const protocol = cookie.secure ? "https:" : "http:";
-      const cookieUrl = `${protocol}//${cookie.domain}${cookie.path}`;
+      const { secure, domain, path, name, storeId } = cookie;
+      const protocol = secure ? "https:" : "http:";
+      const cookieUrl = `${protocol}//${domain}${path}`;
 
       return chrome.cookies.remove({
         url: cookieUrl,
-        name: cookie.name,
-        storeId: cookie.storeId,
+        name: name,
+        storeId: storeId,
       });
     }
   }
