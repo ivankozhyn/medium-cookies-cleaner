@@ -1,2 +1,2 @@
-# medium-cookies-cleaner
-Chrome extension for deleting Cookies from medium-unlimited chrome extension urls list.
+# Free Medium reading.
+Chrome extension for free Medium reading(delete Medium Cookies).
