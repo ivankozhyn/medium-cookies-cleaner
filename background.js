@@ -149,13 +149,15 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
       }
 
       function deleteSignInMediumBanner() {
-        const signInBanner = document.querySelector(
-          "#alternate-user-top-banner-header"
-        );
-        if (signInBanner) {
-          signInBanner.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display =
-            "none";
-        }
+        setTimeout(() => {
+          const signInBanner = document.querySelector(
+            "div#alternate-user-top-banner-header"
+          );
+          if (signInBanner) {
+            signInBanner.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display =
+              "none";
+          }
+        }, 2000);
       }
     }
 
