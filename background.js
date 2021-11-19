@@ -4,108 +4,24 @@ chrome.tabs.onCreated.addListener(async (tab) => {
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   if (changeInfo.url) {
-    const urlsList = [
-      "https://medium.com/*",
-      "https://www.google.com/search/*",
-      "https://towardsdatascience.com/*",
-      "https://hackernoon.com/*",
-      "https://medium.freecodecamp.org/*",
-      "https://psiloveyou.xyz/*",
-      "https://betterhumans.coach.me/*",
-      "https://codeburst.io/*",
-      "https://theascent.pub/*",
-      "https://*.medium.com/*",
-      "https://medium.mybridge.co/*",
-      "https://uxdesign.cc/*",
-      "https://levelup.gitconnected.com/*",
-      "https://itnext.io/*",
-      "https://entrepreneurshandbook.co/*",
-      "https://proandroiddev.com/*",
-      "https://blog.prototypr.io/*",
-      "https://thebolditalic.com/*",
-      "https://blog.usejournal.com/*",
-      "https://blog.angularindepth.com/*",
-      "https://blog.bitsrc.io/*",
-      "https://blog.devartis.com/*",
-      "https://blog.maddevs.io/*",
-      "https://blog.getambassador.io/*",
-      "https://uxplanet.org/*",
-      "https://instagram-engineering.com/*",
-      "https://calia.me/*",
-      "https://productcoalition.com/*",
-      "https://engineering.opsgenie.com/*",
-      "https://android.jlelse.eu/*",
-      "https://robinhood.engineering/*",
-      "https://blog.hipolabs.com/*",
-      "https://ux.shopify.com/*",
-      "https://engineering.talkdesk.com/*",
-      "https://blog.codegiant.io/*",
-      "https://tech.olx.com/*",
-      "https://netflixtechblog.com/*",
-      "https://hackingandslacking.com/*",
-      "https://blog.kotlin-academy.com/*",
-      "https://blog.securityevaluators.com/*",
-      "https://blog.kubernauts.io/*",
-      "https://blog.coffeeapplied.com/*",
-      "https://unbounded.io/*",
-      "https://writingcooperative.com/*",
-      "https://*.plainenglish.io/*",
-      "https://*.betterprogramming.pub/*",
-      "https://blog.doit-intl.com/*",
-      "https://eand.co/*",
-      "https://techuisite.com/*",
-      "https://levelupprogramming.net/*",
-      "https://betterhumans.pub/*",
-      "https://betterprogramming.pub/*",
-      "https://pub.towardsai.net/*",
-      "https://bettermarketing.pub/*",
-      "https://themakingofamillionaire.com/*",
-      "https://medium.datadriveninvestor.com/*",
-      "https://bootcamp.uxdesign.cc/*",
-      "https://*.baos.pub/*",
-      "https://www.inbitcoinwetrust.net/*",
-      "https://blog.prototypr.io/*",
-      "https://blog.devgenius.io/*",
-    ];
-
+    const google = "www.google.com";
     init();
 
-    function init() {
-      if (checkSafeUrl()) {
-        deleteCurrentTabUrlCookie();
-        deleteMediumCookies();
+    async function init() {
+      deleteCurrentTabUrlCookie();
+      deleteMediumCookies();
+      if (new URL(changeInfo.url).hostname !== google) {
+        await injectMyJSCodeToCurrentSite();
+        await setBadgeDone();
       }
     }
 
-    function getUrlsListWithoutHTTPS() {
-      return [
-        ...new Set(
-          urlsList.map((url) => {
-            return url
-              .replace("https://*.", "")
-              .replace("https://", "")
-              .slice(0, -2);
-          })
-        ),
-      ];
-    }
-
-    function checkSafeUrl() {
-      return !!getUrlsListWithoutHTTPS().filter((url) =>
-        getCurrentTabHostname().includes(url)
-      ).length;
-    }
-
     function deleteCurrentTabUrlCookie() {
-      deleteDomainCookies(getCurrentTabHostname());
+      deleteDomainCookies(new URL(changeInfo.url).hostname);
     }
 
     function deleteMediumCookies() {
       deleteDomainCookies("medium.com");
-    }
-
-    function getCurrentTabHostname() {
-      return new URL(changeInfo.url).hostname;
     }
 
     async function deleteDomainCookies(domain) {
@@ -123,42 +39,13 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
       } catch (error) {
         console.log(`Cookies cleaner unexpected error: ${error.message}`);
       }
-
-      setBadgeDone();
-      setMyJSCodeToCurrentSite();
     }
 
-    function setMyJSCodeToCurrentSite() {
-      chrome.scripting.executeScript({
+    async function injectMyJSCodeToCurrentSite() {
+      await chrome.scripting.executeScript({
         target: { tabId },
-        function: DeleteMediumBanners,
+        files: ["content.js"],
       });
-    }
-
-    function DeleteMediumBanners() {
-      deleteFreeStoriesMediumCounterBanner();
-      deleteSignInMediumBanner();
-
-      function deleteFreeStoriesMediumCounterBanner() {
-        const freeStoriesMediumCounterBanner = document.querySelector(
-          ".meteredContent>section"
-        );
-        if (freeStoriesMediumCounterBanner) {
-          freeStoriesMediumCounterBanner.style.display = "none";
-        }
-      }
-
-      function deleteSignInMediumBanner() {
-        setTimeout(() => {
-          const signInBanner = document.querySelector(
-            "div#alternate-user-top-banner-header"
-          );
-          if (signInBanner) {
-            signInBanner.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.style.display =
-              "none";
-          }
-        }, 2000);
-      }
     }
 
     async function setBadgeDone() {
@@ -171,8 +58,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
 
     function deleteCookie(cookie) {
       const { secure, domain, path, name, storeId } = cookie;
+      const correctDomain =
+        domain[0] === "." ? domain.split("").slice(1).join("") : domain;
       const protocol = secure ? "https:" : "http:";
-      const cookieUrl = `${protocol}//${domain}${path}`;
+      const cookieUrl = `${protocol}//${correctDomain}${path}`;
 
       return chrome.cookies.remove({
         url: cookieUrl,
