@@ -6,13 +6,16 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
   if (changeInfo.url) {
     const google = 'www.google.com'
 
-    const init = async () => {
+    const init = () => {
       deleteCurrentTabUrlCookie()
       deleteMediumCookies()
-      if (new URL(changeInfo.url || '').hostname !== google) {
-        await injectMyJSCodeToCurrentSite()
-        await setBadgeDone()
-      }
+
+      chrome.webNavigation.onCompleted.addListener(async () => {
+        if (new URL(changeInfo.url || '').hostname !== google) {
+          await injectMyJSCodeToCurrentSite()
+          await setBadgeDone()
+        }
+      })
     }
 
     const deleteCurrentTabUrlCookie = () => {
@@ -70,6 +73,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
         tabId,
         color: '#34A853',
       })
+
       await chrome.action.setBadgeText({ tabId, text: 'Done' })
     }
 

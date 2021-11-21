@@ -12,7 +12,8 @@ const deleteFreeStoriesMediumCounterBanner = () => {
 }
 
 const deleteSignInMediumBanner = () => {
-  setTimeout(() => {
+  let counterOfAttemptsToRemoveBanner = 0
+  const idInterval = setInterval(() => {
     const signInBanner: HTMLDivElement | null = document.querySelector(
       'div#alternate-user-top-banner-header',
     )
@@ -22,7 +23,11 @@ const deleteSignInMediumBanner = () => {
           ?.parentNode as HTMLDivElement
       ).style.display = 'none'
     }
-  }, 5000)
+    counterOfAttemptsToRemoveBanner++
+    if (counterOfAttemptsToRemoveBanner === 15) {
+      clearInterval(idInterval)
+    }
+  }, 1000)
 }
 
 deleteMediumBanners()
