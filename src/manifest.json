@@ -74,7 +74,10 @@
     "https://www.inbitcoinwetrust.net/*",
     "https://blog.prototypr.io/*",
     "https://blog.devgenius.io/*",
-    "https://*.gyanendra.tech/"
+    "https://*.gyanendra.tech/",
+    "https://engineering.99x.io/",
+    "https://*.flatstack.com/",
+    "https://enlear.academy/"
   ],
   "action": {
     "default_icon": {
