@@ -19,7 +19,7 @@ const deleteSignInMediumBanner = () => {
     )
     if (signInBanner) {
       ;(
-        signInBanner?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode
+        signInBanner.parentNode?.parentNode?.parentNode?.parentNode?.parentNode
           ?.parentNode as HTMLDivElement
       ).style.display = 'none'
     }
