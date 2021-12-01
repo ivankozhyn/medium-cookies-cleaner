@@ -48,7 +48,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
 
       const deleteCurrentTabUrlCookie = () => {
-        deleteDomainCookies(new URL(sender?.tab?.url || '').hostname)
+        if (sender?.tab?.url) {
+          deleteDomainCookies(new URL(sender?.tab?.url).hostname)
+        }
       }
 
       const deleteMediumCookies = () => {

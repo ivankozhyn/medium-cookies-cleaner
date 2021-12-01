@@ -2,7 +2,8 @@ const image = document.querySelector('img')
 
 const mediumDeployDomain = 'miro.medium.com'
 
-if (new URL(image?.src || '').hostname === mediumDeployDomain) {
+if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
+  console.log('image: ', image)
   chrome.runtime.sendMessage({ message: 'deleteCookies' }, response => {
     if (response.status === 'done') {
       const deleteMediumBanners = () => {
