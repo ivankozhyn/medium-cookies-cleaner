@@ -3,36 +3,27 @@ chrome.tabs.onCreated.addListener(async tab => {
 })
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
-  if (changeInfo.url && !changeInfo.url.includes('chrome://')) {
-    const injectMyJSCodeToCurrentSite = async () => {
-      const getCurrentTab = async () => {
-        let queryOptions = { active: true, currentWindow: true }
-        let [tab] = await chrome.tabs.query(queryOptions)
-        return tab
-      }
-
-      const currentTab = await getCurrentTab()
-
-      try {
-        if (currentTab?.id === tabId) {
-          await chrome.scripting.executeScript({
-            target: { tabId: currentTab?.id },
-            files: ['content.js'],
-          })
+  if (changeInfo.status === 'complete') {
+    chrome.tabs.get(tabId, tab => {
+      if (tab.url && !tab.url.includes('chrome://')) {
+        const injectMyJSCodeToCurrentSite = async () => {
+          try {
+            await chrome.scripting.executeScript({
+              target: { tabId },
+              files: ['content.js'],
+            })
+          } catch (error) {
+            console.log(
+              'injectMyJSCodeToCurrentSite error: ',
+              error,
+              changeInfo.url,
+              tabId,
+            )
+          }
         }
-      } catch (error) {
-        console.log(
-          'injectMyJSCodeToCurrentSite error: ',
-          error,
-          changeInfo.url,
-          tabId,
-          currentTab?.id,
-        )
-      }
-    }
 
-    chrome.webNavigation.onCompleted.addListener(async () => {
-      await injectMyJSCodeToCurrentSite()
+        injectMyJSCodeToCurrentSite()
+      }
     })
   }
 })

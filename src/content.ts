@@ -3,7 +3,6 @@ const image = document.querySelector('img')
 const mediumDeployDomain = 'miro.medium.com'
 
 if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
-  console.log('image: ', image)
   chrome.runtime.sendMessage({ message: 'deleteCookies' }, response => {
     if (response.status === 'done') {
       const deleteMediumBanners = () => {
@@ -30,6 +29,8 @@ if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
               signInBanner.parentNode?.parentNode?.parentNode?.parentNode
                 ?.parentNode?.parentNode as HTMLDivElement
             ).style.display = 'none'
+            clearInterval(idInterval)
+            return
           }
           counterOfAttemptsToRemoveBanner++
           if (counterOfAttemptsToRemoveBanner === 15) {
