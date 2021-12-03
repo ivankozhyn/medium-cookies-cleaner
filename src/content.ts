@@ -8,9 +8,11 @@ if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
       const deleteMediumBanners = () => {
         deleteFreeStoriesMediumCounterBanner()
         deleteSignInMediumBanner()
+        chrome.runtime.sendMessage({ message: 'deleteBanners' })
       }
 
       const deleteFreeStoriesMediumCounterBanner = () => {
+        chrome.runtime.sendMessage({ message: 'deleteBanners1' })
         const freeStoriesMediumCounterBanner: HTMLDivElement | null =
           document.querySelector('.meteredContent>section')
         if (freeStoriesMediumCounterBanner) {
@@ -19,6 +21,7 @@ if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
       }
 
       const deleteSignInMediumBanner = () => {
+        chrome.runtime.sendMessage({ message: 'deleteBanners2' })
         let counterOfAttemptsToRemoveBanner = 0
         const idInterval = setInterval(() => {
           const signInBanner: HTMLDivElement | null = document.querySelector(

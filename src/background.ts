@@ -30,12 +30,28 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   try {
+    const setBadgeDone = async (
+      tabId: number,
+      color = '#34A853',
+      text = 'Done',
+    ) => {
+      await chrome.action.setBadgeBackgroundColor({
+        tabId,
+        color,
+      })
+
+      await chrome.action.setBadgeText({
+        tabId,
+        text,
+      })
+    }
+
     if (request.message === 'deleteCookies') {
       const init = async () => {
         deleteCurrentTabUrlCookie()
         deleteMediumCookies()
         sendResponse({ status: 'done' })
-        await setBadgeDone()
+        await setDeleteCookiesBadgeDone()
       }
 
       const deleteCurrentTabUrlCookie = () => {
@@ -83,19 +99,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })
       }
 
-      const setBadgeDone = async () => {
-        await chrome.action.setBadgeBackgroundColor({
-          tabId: sender?.tab?.id,
-          color: '#34A853',
-        })
-
-        await chrome.action.setBadgeText({
-          tabId: sender?.tab?.id,
-          text: 'Done',
-        })
+      const setDeleteCookiesBadgeDone = () => {
+        if (sender?.tab?.id) {
+          setBadgeDone(sender.tab.id, '#4F74B3')
+        }
       }
 
       init()
+    }
+
+    if (request.message === 'deleteBanners') {
+      if (sender?.tab?.id) {
+        setBadgeDone(sender.tab.id)
+      }
     }
   } catch (error) {
     console.log('error: ', error)
