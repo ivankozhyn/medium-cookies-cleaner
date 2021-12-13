@@ -23,30 +23,19 @@ if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
       const deleteSignInMediumBanner = () => {
         chrome.runtime.sendMessage({ message: 'deleteBanners2' })
         let counterOfAttemptsToRemoveBanner = 0
+        let numberOfClicksToCloseTheBanner = 0
         const idInterval = setInterval(() => {
-          const signInBanner: HTMLDivElement | null = document.querySelector(
-            'div#alternate-user-top-banner-header',
-          )
-          if (signInBanner) {
-            ;(
-              signInBanner.parentNode?.parentNode?.parentNode?.parentNode
-                ?.parentNode?.parentNode as HTMLDivElement
-            ).style.display = 'none'
-            clearInterval(idInterval)
-            return
-          }
-
-          const signInBanner2: NodeListOf<HTMLButtonElement> | null =
+          const signInBanner: NodeListOf<HTMLButtonElement> | null =
             document.querySelectorAll('button[data-testid="close-button"]')
-          if (!!signInBanner2?.length) {
-            signInBanner2.forEach(banner => {
-              ;(
-                banner?.parentNode?.parentNode?.parentNode?.parentNode
-                  ?.parentNode as HTMLDivElement
-              ).style.display = 'none'
+          if (signInBanner?.length) {
+            signInBanner.forEach(banner => {
+              numberOfClicksToCloseTheBanner++
+              banner.click()
             })
-            clearInterval(idInterval)
-            return
+            if (numberOfClicksToCloseTheBanner >= 3) {
+              clearInterval(idInterval)
+              return
+            }
           }
 
           counterOfAttemptsToRemoveBanner++
