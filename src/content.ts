@@ -35,6 +35,20 @@ if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
             clearInterval(idInterval)
             return
           }
+
+          const signInBanner2: NodeListOf<HTMLButtonElement> | null =
+            document.querySelectorAll('button[data-testid="close-button"]')
+          if (!!signInBanner2?.length) {
+            signInBanner2.forEach(banner => {
+              ;(
+                banner?.parentNode?.parentNode?.parentNode?.parentNode
+                  ?.parentNode as HTMLDivElement
+              ).style.display = 'none'
+            })
+            clearInterval(idInterval)
+            return
+          }
+
           counterOfAttemptsToRemoveBanner++
           if (counterOfAttemptsToRemoveBanner === 15) {
             clearInterval(idInterval)
