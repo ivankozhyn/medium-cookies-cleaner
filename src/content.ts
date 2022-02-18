@@ -14,7 +14,7 @@ if (image?.src && new URL(image.src).hostname === mediumDeployDomain) {
       const deleteFreeStoriesMediumCounterBanner = () => {
         chrome.runtime.sendMessage({ message: 'deleteBanners1' })
         const freeStoriesMediumCounterBanner: HTMLDivElement | null =
-          document.querySelector('.meteredContent>section')
+          document.querySelector('.meteredContent>div>div')
         if (freeStoriesMediumCounterBanner) {
           freeStoriesMediumCounterBanner.style.display = 'none'
         }
